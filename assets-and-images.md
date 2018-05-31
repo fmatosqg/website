@@ -49,7 +49,8 @@ matter.
 
 During a build, Flutter places assets into a special archive called
 the _asset bundle_, which apps can read from at runtime.
-
+ 
+* Note: subfolders are not scanned for files unless they hold _variants_. See more information on _variants_ below.  
 ### Asset variants
 
 The build process supports the notion of asset variants: different
@@ -65,7 +66,7 @@ directory:
   .../pubspec.yaml
   .../graphics/my_icon.png
   .../graphics/background.png
-  .../graphics/dark/background.png
+  .../graphics/2.0x/background.png
   ...etc.
 ```
 ...and your `pubspec.yaml` file contains:
@@ -76,7 +77,7 @@ flutter:
     - graphics/background.png
 ```
 
-...then both `graphics/background.png` and `graphics/dark/background.png`
+...then both `graphics/background.png` and `graphics/2.0x/background.png`
 will be included in your asset bundle. The former is considered the
 _main asset_, while the latter is considered a _variant_.
 
@@ -87,12 +88,14 @@ flutter:
     - graphics/
 ```
 
-... then `graphics/my_icon.png`, `graphics/background.png` and `graphics/dark/background.png` will be included.
+... then `graphics/my_icon.png`, `graphics/background.png` and `graphics/2.0x/background.png` will be included.
 
 Flutter uses asset variants when choosing resolution appropriate
 images; see below. In the future, this mechanism may be extended to
 include variants for different locales or regions, reading directions,
 etc.
+
+* Note: if the _main asset_ file is not added to the disk the _variant_ is still treated as if the file existed. Following the example above example, if we remove `graphics/background.png` from the disk and rebuild the app, every reference to the asset `graphics/background.png` will load the `graphics/2.0x/background.png` file.
 
 ## Loading assets
 
